@@ -39,6 +39,34 @@ export async function saveUserToDatabase(user: UserData) {
     return newUser;
   } catch (error) {
     console.log(error);
-    return error;
+    return null;
+  }
+}
+
+export async function signInUser(credentials: {
+  email: string;
+  password: string;
+}) {
+  try {
+    const session = await account.createEmailPasswordSession(
+      credentials.email,
+      credentials.password
+    );
+    if (!session) throw new Error("Unable to create session");
+    return session;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getCurrentUser() {
+  try {
+    const user = await account.get();
+    if (!user) throw new Error("No user logged in");
+    return user;
+  } catch (error) {
+    console.log(error);
+    return null;
   }
 }

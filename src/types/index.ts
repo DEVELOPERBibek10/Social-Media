@@ -12,3 +12,7 @@ export interface UserData {
   email: string;
   imageUrl: URL | string;
 }
+
+export interface currentUserData extends UserData {
+  bio: string;
+}

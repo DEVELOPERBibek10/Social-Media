@@ -13,12 +13,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { signupFormSchema } from "@/lib/Zod";
 import Loader from "./shared/Loader";
-import { Link } from "react-router-dom";
-import { createUserAccount } from "@/lib/Appwrite/api";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useCreateUserAccount, useSignInUser } from "@/lib/react-query/queries";
 
 const SignupForm = () => {
-  const isLoading = false;
+  const { mutateAsync: createUserAccount, isPending: isCreatingUserAccount } =
+    useCreateUserAccount();
+  const { mutateAsync: signInUser, isPending: isSigningInUser } =
+    useSignInUser();
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
@@ -31,7 +36,15 @@ const SignupForm = () => {
   async function onSubmit(values: z.infer<typeof signupFormSchema>) {
     const newUser = await createUserAccount(values);
     if (!newUser) return toast.error("Error creating account");
-    toast.success("Account created successfully!");
+    const session = await signInUser({
+      email: values.email,
+      password: values.password,
+    });
+    if (!session) {
+      toast.error("Error signing in user");
+      navigate("/sign-in");
+      return;
+    }
     form.reset();
   }
   return (
@@ -125,7 +138,7 @@ const SignupForm = () => {
             className="p-5 cursor-pointer bg-blue-500 hover:bg-blue-600"
             type="submit"
           >
-            {isLoading ? (
+            {isCreatingUserAccount && isSigningInUser ? (
               <div className="flex justify-center items-center gap-2">
                 <Loader /> Loading...
               </div>
