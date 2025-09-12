@@ -1,9 +1,7 @@
-
-
 const SigninForm = () => {
   return (
-    <div>SigninForm</div>
-  )
-}
+    <div className="h-full flex justify-center items-center">SigninForm</div>
+  );
+};
 
-export default SigninForm
+export default SigninForm;

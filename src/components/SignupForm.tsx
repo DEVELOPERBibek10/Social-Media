@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { signupFormSchema } from "@/lib/Zod";
 import Loader from "./shared/Loader";
+import { Link } from "react-router-dom";
+import { createUserAccount } from "@/lib/Appwrite/api";
 
 const SignupForm = () => {
   const isLoading = false;
@@ -25,20 +27,21 @@ const SignupForm = () => {
       password: "",
     },
   });
-  function onSubmit(values: z.infer<typeof signupFormSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof signupFormSchema>) {
+    const newUser = await createUserAccount(values);
+    console.log(newUser);
   }
   return (
     <Form {...form}>
       <div className="sm:w-[450px] flex items-center justify-center flex-col">
         <h1 className="text-3xl font-bold text-blue-600 text-center">
-          NEPALBOOK
+          NEPABOOK
         </h1>
         <h2 className="text-[24px] md:text-[30px] font-bold leading-[140%] tracking-tighter pt-12 sm:pt-5">
           Create new account
         </h2>
         <p className="text-slate-500 text-[14px] font-medium leading-[140%] md:text-[16px] md:font-normal mt-4 text-center ">
-          Welcome to Nepbook, Please provide your details to create an account.
+          Welcome to Nepabook, Please provide your details to create an account.
         </p>
 
         <form
@@ -127,6 +130,12 @@ const SignupForm = () => {
               <span>SignUp</span>
             )}
           </Button>
+          <p className="text-slate-600 text-center mt-2">
+            Already have an account?
+            <Link to="/sign-in" className="text-blue-600 hover:underline ml-1">
+              Login
+            </Link>
+          </p>
         </form>
       </div>
     </Form>
