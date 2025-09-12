@@ -4,3 +4,11 @@ export interface NewUser {
   email: string;
   password: string;
 }
+
+export interface UserData {
+  accountId: string;
+  name: string;
+  username?: string;
+  email: string;
+  imageUrl: URL | string;
+}

@@ -15,6 +15,7 @@ import { signupFormSchema } from "@/lib/Zod";
 import Loader from "./shared/Loader";
 import { Link } from "react-router-dom";
 import { createUserAccount } from "@/lib/Appwrite/api";
+import { toast } from "sonner";
 
 const SignupForm = () => {
   const isLoading = false;
@@ -29,7 +30,9 @@ const SignupForm = () => {
   });
   async function onSubmit(values: z.infer<typeof signupFormSchema>) {
     const newUser = await createUserAccount(values);
-    console.log(newUser);
+    if (!newUser) return toast.error("Error creating account");
+    toast.success("Account created successfully!");
+    form.reset();
   }
   return (
     <Form {...form}>
