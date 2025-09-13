@@ -1,10 +1,22 @@
+import type { RootState } from "@/lib/Redux/store";
+
+import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
+import Loader from "../shared/Loader";
 
 const AuthLayout = () => {
-  const isAuth = false;
+  const { loading, isAuth } = useSelector((state: RootState) => state.auth);
 
+  if (loading) {
+    return (
+      <div className="w-full flex justify-center items-center h-screen">
+        <Loader w={54} h={54} />
+      </div>
+    );
+  }
   if (isAuth) {
-    return <Navigate to={"/"} />;
+    console.log(isAuth);
+    return <Navigate to="/" />;
   } else {
     return (
       <>

@@ -14,3 +14,16 @@ export const signupFormSchema = z.object({
     message:"Password cannot be greater than 16 characters."
   })
 })
+
+export const signinFormSchema = z.object({
+  
+  email: z.email(),
+  password: z
+    .string()
+    .min(8, {
+      message: "Password must be at least 8 characters.",
+    })
+    .max(16, {
+      message: "Password cannot be greater than 16 characters.",
+    }),
+});

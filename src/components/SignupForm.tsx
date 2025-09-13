@@ -16,6 +16,9 @@ import Loader from "./shared/Loader";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useCreateUserAccount, useSignInUser } from "@/lib/react-query/queries";
+import { useAppDispatch } from "@/Hook/hook";
+import { getCurrentUserDataFromDB } from "@/lib/Redux/auth";
+import { setIsAuth } from "@/features/AuthSlice";
 
 const SignupForm = () => {
   const { mutateAsync: createUserAccount, isPending: isCreatingUserAccount } =
@@ -23,6 +26,7 @@ const SignupForm = () => {
   const { mutateAsync: signInUser, isPending: isSigningInUser } =
     useSignInUser();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
@@ -45,6 +49,15 @@ const SignupForm = () => {
       navigate("/sign-in");
       return;
     }
+    try {
+      dispatch(getCurrentUserDataFromDB()).unwrap();
+      dispatch(setIsAuth(true));
+      toast.success("Account created and signed in successfully!");
+      navigate("/");
+    } catch (error) {
+      toast.error(`Failed to fetch user data: ${error}`);
+    }
+
     form.reset();
   }
   return (
@@ -137,10 +150,11 @@ const SignupForm = () => {
           <Button
             className="p-5 cursor-pointer bg-blue-500 hover:bg-blue-600"
             type="submit"
+            disabled={isCreatingUserAccount || isSigningInUser}
           >
             {isCreatingUserAccount && isSigningInUser ? (
               <div className="flex justify-center items-center gap-2">
-                <Loader /> Loading...
+                <Loader w={24} h={24} /> Loading...
               </div>
             ) : (
               <span>SignUp</span>

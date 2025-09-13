@@ -1,3 +1,5 @@
+import type { Models } from "appwrite";
+
 export interface NewUser {
   name: string;
   username: string;
@@ -13,6 +15,12 @@ export interface UserData {
   imageUrl: URL | string;
 }
 
-export interface currentUserData extends UserData {
-  bio: string;
+export interface currentUserData extends Models.Document {
+  bio?: string;
+  imageId?: string;
+  accountId: string;
+  name: string;
+  username: string;
+  email: string;
+  imageUrl: URL | string;
 }
