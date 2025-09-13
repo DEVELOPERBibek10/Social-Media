@@ -25,7 +25,7 @@ const ProtectedLayout = () => {
     }
     dispatch(getCurrentUserDataFromDB());
     setIsAuth(true);
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate, isAuth]);
   return (
     <div>
       <Outlet />
