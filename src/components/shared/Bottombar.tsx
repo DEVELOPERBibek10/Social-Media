@@ -1,5 +1,5 @@
 const Bottombar = () => {
-  return <div>Bottombar</div>;
+  return <div className="flex md:hidden">Bottombar</div>;
 };
 
 export default Bottombar;
