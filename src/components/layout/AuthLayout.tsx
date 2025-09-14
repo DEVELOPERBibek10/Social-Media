@@ -15,7 +15,6 @@ const AuthLayout = () => {
     );
   }
   if (isAuth) {
-    console.log(isAuth);
     return <Navigate to="/" />;
   } else {
     return (

@@ -17,7 +17,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useSignInUser } from "@/lib/react-query/queries";
 import { useAppDispatch } from "@/Hook/hook";
-import { getCurrentUserDataFromDB } from "@/lib/Redux/auth";
 import { setIsAuth } from "@/features/AuthSlice";
 
 const SignupForm = () => {
@@ -42,14 +41,10 @@ const SignupForm = () => {
       toast.error("Error signing in user");
       return;
     }
-    try {
-      dispatch(getCurrentUserDataFromDB()).unwrap();
-      dispatch(setIsAuth(true));
-      toast.success("Signed in successfully!");
-      navigate("/");
-    } catch (error) {
-      toast.error(`Failed to fetch user data: ${error}`);
-    }
+    dispatch(setIsAuth(true));
+    toast.success("Signed in successfully!");
+    navigate("/");
+
     form.reset();
   }
   return (

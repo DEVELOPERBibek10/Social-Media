@@ -25,7 +25,7 @@ function App() {
         </Provider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-      <Toaster closeButton className="p-12" position={"top-right"} />
+      <Toaster duration={3000} className="p-12" />
     </main>
   );
 }
