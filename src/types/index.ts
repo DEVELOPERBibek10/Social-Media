@@ -24,3 +24,9 @@ export interface currentUserData extends Models.Document {
   email: string;
   imageUrl: URL | string;
 }
+
+export interface NavLinkType {
+  label: string;
+  route: string;
+  imgUrl: string;
+}

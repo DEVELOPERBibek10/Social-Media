@@ -38,7 +38,10 @@ const Topbar = () => {
           >
             <LogOut className="size-8 text-red-500" />
           </Button>
-          <Link to={`/profile/${user?._id}`}>
+          <Link
+            to={`/profile/${user?._id}`}
+            className="flex justify-center items-center gap-3"
+          >
             {!user?.imageUrl ? (
               <div className="w-10 h-10 rounded-full bg-muted-foreground">
                 <CircleUserRound className="size-full" />
@@ -49,6 +52,9 @@ const Topbar = () => {
                 alt="profile"
                 className="w-10 h-10 rounded-full object-cover"
               />
+            )}
+            {user?.name && (
+              <span className="font-medium text-sm">{user?.name}</span>
             )}
           </Link>
         </div>
