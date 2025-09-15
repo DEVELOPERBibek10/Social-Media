@@ -20,7 +20,7 @@ const Topbar = () => {
   }, [isSuccess, navigate]);
 
   return (
-    <section className="w-full sticky top-0 left-0 z-50 md:hidden">
+    <section className="w-full sticky top-0 left-0 z-50 bg-white md:hidden">
       <div className="flex justify-between items-center py-4 px-5">
         <Link to="/" className="flex gap-3 items-center">
           <h1 className="text-xl font-bold text-blue-500 text-center">

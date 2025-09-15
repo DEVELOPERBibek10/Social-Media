@@ -26,7 +26,7 @@ const LeftSidebar = () => {
         <Link to="/">
           <h1 className="text-3xl font-bold text-blue-500">NEPABOOK</h1>
         </Link>
-        <Link to={`/profile/${user?._id}`} className="flex items-center gap-3">
+        <Link to={`/profile/${user?.$id}`} className="flex items-center gap-3">
           {!user?.imageUrl ? (
             <div className="w-12 h-12 rounded-full flex items-center justify-center">
               <CircleUserRound className="size-full" />
@@ -48,21 +48,18 @@ const LeftSidebar = () => {
           </div>
         </Link>
         <ul className="flex flex-col gap-6">
-          {sidebarLinks.map((link: NavLinkType) => {
-            const isActive = pathname === link.route;
+          {sidebarLinks.map(({ label, route, imgUrl }: NavLinkType) => {
+            const isActive = pathname === route;
             return (
               <li
-                key={link.label}
+                key={label}
                 className={`rounded-lg text-lg font-medium leading-[140%] ${
                   !isActive && "hover:bg-blue-200"
                 }  transition group ${isActive && "bg-blue-200"}`}
               >
-                <NavLink
-                  to={link.route}
-                  className="flex gap-5 items-center p-3"
-                >
-                  <img src={link.imgUrl} alt={link.label} className="w-8 h-8" />
-                  {link.label}
+                <NavLink to={route} className="flex gap-5 items-center p-3">
+                  <img src={imgUrl} alt={label} className="w-8 h-8" />
+                  {label}
                 </NavLink>
               </li>
             );

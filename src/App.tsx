@@ -7,7 +7,7 @@ import {
   RouterProvider,
 } from "./index";
 import { store } from "./lib/Redux/store";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() {
   const queryClient = new QueryClient({
@@ -23,7 +23,7 @@ function App() {
         <Provider store={store}>
           <RouterProvider router={route} />
         </Provider>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
       <Toaster duration={3000} className="p-12" />
     </main>
