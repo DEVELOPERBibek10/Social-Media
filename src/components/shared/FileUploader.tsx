@@ -4,17 +4,22 @@ import { Button } from "../ui/button";
 
 interface FileUploaderProps {
   fieldChange: (file: File[]) => void;
-  mediaUrl: string;
+  mediaUrl?: string;
 }
 
-const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
+const FileUploader = ({ fieldChange }: FileUploaderProps) => {
   const [file, setFile] = useState<File[]>([]);
   const [fileUrl, setFileUrl] = useState("");
-  const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
-    setFile(acceptedFiles);
-    fieldChange(acceptedFiles);
-    setFileUrl(URL.createObjectURL(acceptedFiles[0]));
-  }, []);
+
+  const onDrop = useCallback(
+    (acceptedFiles: FileWithPath[]) => {
+      setFile(acceptedFiles);
+      fieldChange(acceptedFiles);
+      setFileUrl(URL.createObjectURL(acceptedFiles[0]));
+    },
+    [fieldChange]
+  );
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
@@ -29,7 +34,7 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
     >
       <input {...getInputProps()} className="cursor-pointer" />
 
-      {fileUrl ? (
+      {fileUrl && file ? (
         <>
           <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
             <img

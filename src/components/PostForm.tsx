@@ -16,12 +16,22 @@ import { Textarea } from "./ui/textarea";
 import FileUploader from "./shared/FileUploader";
 import type { Models } from "appwrite";
 import { PostFormSchema } from "@/lib/Zod";
+import { useCreatePost } from "@/lib/react-query/queries";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/lib/Redux/store";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface PostFormProps {
   post?: Models.Document;
 }
 
 const PostForm = ({ post }: PostFormProps) => {
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { mutateAsync: createPost, isPending: isLoadingCreate } =
+    useCreatePost();
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof PostFormSchema>>({
     resolver: zodResolver(PostFormSchema),
     defaultValues: {
@@ -32,12 +42,17 @@ const PostForm = ({ post }: PostFormProps) => {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof PostFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof PostFormSchema>) {
+    const newPost = await createPost({
+      ...values,
+      userId: user!.$id,
+    });
+    if (!newPost) {
+      toast("Please try again");
+    }
+    navigate("/");
   }
+
   return (
     <Form {...form}>
       <form
@@ -112,12 +127,14 @@ const PostForm = ({ post }: PostFormProps) => {
         <div className="flex gap-4 items-center justify-end">
           <Button
             type="submit"
+            disabled={isLoadingCreate}
             className="h-12 px-5 bg-green-500 hover:bg-green-600 cursor-pointer"
           >
             Create
           </Button>
           <Button
-            type="submit"
+            type="button"
+            disabled={isLoadingCreate}
             className="h-12 px-5 bg-red-500 hover:bg-red-600 cursor-pointer"
           >
             Cancel

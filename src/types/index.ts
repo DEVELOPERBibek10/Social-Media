@@ -30,3 +30,11 @@ export interface NavLinkType {
   route: string;
   imgUrl: string;
 }
+
+export interface NewPost {
+  userId: string;
+  caption: string;
+  file: File[];
+  location?: string;
+  tags?: string;
+}

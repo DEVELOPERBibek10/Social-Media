@@ -25,7 +25,7 @@ export const route = createBrowserRouter(
       <Route path="/sign-in" element={<SigninPage />} />
     </Route>,
     <Route element={<ProtectedLayout />}>
-      <Route index element={<Home />} />
+      <Route path="/" element={<Home />} />
       <Route path="/explore" element={<Explore />} />
       <Route path="/saved-posts" element={<Saved />} />
       <Route path="/create-post" element={<CreatePost />} />

@@ -39,7 +39,7 @@ const Topbar = () => {
             <LogOut className="size-8 text-red-500" />
           </Button>
           <Link
-            to={`/profile/${user?._id}`}
+            to={`/profile/${user?.$id}`}
             className="flex justify-center items-center gap-3"
           >
             {!user?.imageUrl ? (

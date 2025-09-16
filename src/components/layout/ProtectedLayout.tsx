@@ -36,7 +36,7 @@ const ProtectedLayout = () => {
     <div className="w-full md:flex gap-3">
       <Topbar />
       <LeftSidebar />
-      <section className="flex flex-1 flex-col min-h-screen">
+      <section className="flex flex-1 w-full flex-col min-h-screen overflow-auto">
         <Outlet />
       </section>
       <Bottombar />
