@@ -70,9 +70,19 @@ export async function signInUser(credentials: {
 
 export async function getCurrentUser() {
   try {
-    const user = await account.get();
-    if (!user) throw new Error("No user logged in");
-    return user;
+    const currentUser = await account.get();
+    if (!currentUser) {
+      throw Error("Session not found");
+    }
+    const currentUserDocuments = await databases.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_USER_COLLECTION_ID,
+      [Query.equal("accountId", currentUser.$id)]
+    );
+    if (currentUserDocuments.total === 0) {
+      throw Error("User document not found");
+    }
+    return currentUserDocuments.documents[0];
   } catch (error) {
     console.log(error);
     return null;
@@ -177,5 +187,56 @@ export async function getRecentPost() {
   } catch (error) {
     console.error(error);
     return null;
+  }
+}
+
+export async function postReaction(postId: string, likedArray: string[]) {
+  try {
+    const updatedPost = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      postId,
+      {
+        liked: [...likedArray],
+      }
+    );
+    if (!updatedPost) throw Error("Post does not exist");
+    return updatedPost;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function savePost(userId: string, postId: string) {
+  try {
+    const savedPost = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.savesCollectionId,
+      ID.unique(),
+      {
+        user: userId,
+        post: postId,
+      }
+    );
+    if (savedPost.total === 0) throw Error("Post is not saved");
+    return savedPost;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function deleteSavedPost(savedRecordId: string) {
+  try {
+    await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.savesCollectionId,
+      savedRecordId
+    );
+    return { status: "ok" };
+  } catch (error) {
+    console.error(error);
+    return { status: "error" };
   }
 }

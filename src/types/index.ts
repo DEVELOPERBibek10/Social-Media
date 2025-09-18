@@ -23,6 +23,8 @@ export interface currentUserData extends Models.Document {
   username: string;
   email: string;
   imageUrl: URL | string;
+  save?: Models.Document[];
+  liked?: Models.Document[];
 }
 
 export interface NavLinkType {

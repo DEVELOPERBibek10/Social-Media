@@ -3,6 +3,7 @@ import { formatRelativeTime } from "@/lib/utils";
 import type { Models } from "appwrite";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import PostStats from "./PostStats";
 
 type PostCardProps = {
   post: Models.Document;
@@ -11,7 +12,7 @@ type PostCardProps = {
 const PostCard = ({ post }: PostCardProps) => {
   const { user } = useSelector((state: RootState) => state.auth);
   return (
-    <div className="bg-gray-100 rounded-xl border border-slate-300 p-5 lg:p-7 w-full max-w-3xl">
+    <div className="bg-gray-100 rounded-xl border border-slate-300 px-4 py-3 lg:px-5 lg:py-4 w-full max-w-3xl">
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center gap-3 w-full">
           <Link to={`/profile/${post.creator.$id}`}>
@@ -68,6 +69,9 @@ const PostCard = ({ post }: PostCardProps) => {
           className="h-64 xs:h-[400px] lg:h-[450px] w-full rounded-2xl object-cover"
         />
       </Link>
+      <div className="w-full flex items-center mt-5">
+        <PostStats post={post} userId={user?.$id} />
+      </div>
     </div>
   );
 };

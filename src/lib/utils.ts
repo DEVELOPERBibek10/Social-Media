@@ -46,3 +46,7 @@ export function formatRelativeTime(dateString: string): string {
   const years = Math.floor(diffInSeconds / secondsInYear);
   return `${years} year${years > 1 ? "s" : ""} ago`;
 }
+
+export const checkedIsLiked = (likeList: string[], userId: string) => {
+  return likeList.includes(userId);
+};
