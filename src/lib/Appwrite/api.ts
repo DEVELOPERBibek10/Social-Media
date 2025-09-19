@@ -85,6 +85,7 @@ export async function getCurrentUser() {
     return currentUserDocuments.documents[0];
   } catch (error) {
     console.log(error);
+
     return null;
   }
 }
@@ -223,6 +224,7 @@ export async function savePost(userId: string, postId: string) {
     return savedPost;
   } catch (error) {
     console.error(error);
+
     return null;
   }
 }
@@ -307,7 +309,8 @@ export async function updatePost(post: UpdatePost) {
 }
 
 export async function deletePost(postId?: string, imageId?: string) {
-  if (postId || imageId) return;
+  if (!postId || !imageId) return;
+  console.log("Hello");
   try {
     const status = await databases.deleteDocument(
       appwriteConfig.databaseId,

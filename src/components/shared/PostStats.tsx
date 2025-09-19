@@ -7,6 +7,7 @@ import {
 
 import { checkedIsLiked } from "@/lib/utils";
 import type { Models } from "appwrite";
+
 import { useEffect, useState } from "react";
 
 interface PostStatsProps {
@@ -23,6 +24,8 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const [isSaved, setIsSaved] = useState(false);
 
   const { data: currentUser } = useGetCurrentUser();
+
+  console.log(currentUser);
 
   const handleLikePost = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
@@ -45,6 +48,8 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const savedPostRecord = currentUser?.save.find(
     (record: Models.Document) => record.post.$id === post.$id
   );
+
+  console.log(post.$id);
 
   useEffect(() => {
     setIsSaved(savedPostRecord ? true : false);
