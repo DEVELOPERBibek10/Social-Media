@@ -11,8 +11,9 @@ type PostCardProps = {
 
 const PostCard = ({ post }: PostCardProps) => {
   const { user } = useSelector((state: RootState) => state.auth);
+
   return (
-    <div className="bg-gray-100 rounded-xl border border-slate-300 px-4 py-3 lg:px-5 lg:py-4 w-full max-w-3xl">
+    <div className="bg-gray-100 rounded-xl border border-slate-300 px-4 py-3 lg:py-4 w-full max-w-3xl md:max-w-2xl">
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center gap-3 w-full">
           <Link to={`/profile/${post.creator.$id}`}>

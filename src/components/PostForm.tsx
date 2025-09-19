@@ -16,21 +16,25 @@ import { Textarea } from "./ui/textarea";
 import FileUploader from "./shared/FileUploader";
 import type { Models } from "appwrite";
 import { PostFormSchema } from "@/lib/Zod";
-import { useCreatePost } from "@/lib/react-query/queries";
+import { useCreatePost, useUpdatePost } from "@/lib/react-query/queries";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/lib/Redux/store";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import Loader from "./shared/Loader";
 
 interface PostFormProps {
   post?: Models.Document;
+  action: "Create" | "Update";
 }
 
-const PostForm = ({ post }: PostFormProps) => {
+const PostForm = ({ post, action }: PostFormProps) => {
   const { user } = useSelector((state: RootState) => state.auth);
   const { mutateAsync: createPost, isPending: isLoadingCreate } =
     useCreatePost();
   const navigate = useNavigate();
+  const { mutateAsync: updatePost, isPending: isUpdatePending } =
+    useUpdatePost();
 
   const form = useForm<z.infer<typeof PostFormSchema>>({
     resolver: zodResolver(PostFormSchema),
@@ -43,13 +47,27 @@ const PostForm = ({ post }: PostFormProps) => {
   });
 
   async function onSubmit(values: z.infer<typeof PostFormSchema>) {
+    if (post && action === "Update") {
+      const updatedPost = await updatePost({
+        ...values,
+        postId: post.$id,
+        imageId: post.imageId,
+        imageUrl: post.imageUrl,
+      });
+
+      if (!updatedPost) toast.error(`${action} post failed! Please try again`);
+
+      return navigate(`/post/${post.$id}`);
+    }
+
     const newPost = await createPost({
       ...values,
       userId: user!.$id,
     });
     if (!newPost) {
-      toast("Please try again");
+      toast.error("Please try again!");
     }
+    toast.success("Post created sucessfully!");
     navigate("/");
   }
 
@@ -84,7 +102,7 @@ const PostForm = ({ post }: PostFormProps) => {
               <FormControl>
                 <FileUploader
                   fieldChange={field.onChange}
-                  mediaUrl={post?.imgUrl}
+                  mediaUrl={post?.imageUrl}
                 />
               </FormControl>
               <FormMessage />
@@ -127,14 +145,15 @@ const PostForm = ({ post }: PostFormProps) => {
         <div className="flex gap-4 items-center justify-end">
           <Button
             type="submit"
-            disabled={isLoadingCreate}
+            disabled={isLoadingCreate || isUpdatePending}
             className="h-12 px-5 bg-green-500 hover:bg-green-600 cursor-pointer"
           >
-            Create
+            {(isLoadingCreate || isUpdatePending) && <Loader w={20} h={20} />}
+            {action} Post
           </Button>
           <Button
             type="button"
-            disabled={isLoadingCreate}
+            disabled={isLoadingCreate || isUpdatePending}
             className="h-12 px-5 bg-red-500 hover:bg-red-600 cursor-pointer"
           >
             Cancel

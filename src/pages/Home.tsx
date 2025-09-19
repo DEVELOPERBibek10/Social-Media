@@ -9,7 +9,7 @@ const Home = () => {
   if (!isError) {
     return (
       <>
-        <main className="flex flex-1 w-full">
+        <main className="flex flex-1 w-full md:w-[96.5%]">
           <div className="flex flex-col flex-1 items-center gap-10  py-10 px-5 md:px-8 lg:p-14 mx-auto">
             <div className="flex flex-1 flex-col items-center w-full gap-6 md:gap-9">
               {isPostLoading ? (
@@ -21,9 +21,9 @@ const Home = () => {
                   </span>
                 </div>
               ) : (
-                <ul className="flex flex-1 flex-col gap-10 w-full">
+                <ul className="flex flex-1 flex-col gap-10 w-full ">
                   {posts?.documents.map((post: Models.Document) => (
-                    <li key={post.$id} className="flex justify-center w-[90%]">
+                    <li key={post.$id} className="flex justify-center w-full">
                       <PostCard post={post} />
                     </li>
                   ))}
