@@ -1,4 +1,10 @@
-import type { NewPost, NewUser, UpdatePost, UserData } from "@/types";
+import type {
+  currentUserData,
+  NewPost,
+  NewUser,
+  UpdatePost,
+  UserData,
+} from "@/types";
 import {
   account,
   appwriteConfig,
@@ -79,10 +85,12 @@ export async function getCurrentUser() {
       import.meta.env.VITE_APPWRITE_USER_COLLECTION_ID,
       [Query.equal("accountId", currentUser.$id)]
     );
+
     if (currentUserDocuments.total === 0) {
       throw Error("User document not found");
     }
-    return currentUserDocuments.documents[0];
+
+    return currentUserDocuments.documents[0] as currentUserData;
   } catch (error) {
     console.log(error);
 
@@ -323,6 +331,44 @@ export async function deletePost(postId?: string, imageId?: string) {
     if (!deletion) throw Error;
 
     return { status: "OK" };
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getInfinitePosts({
+  pageParam,
+}: {
+  pageParam: string | null;
+}) {
+  const queries = [Query.orderDesc("$updatedAt"), Query.limit(6)];
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam));
+  }
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      queries
+    );
+    if (!posts) throw Error;
+    return posts;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function searchPosts(searchTerm: string) {
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      [Query.search("caption", searchTerm)]
+    );
+    if (!posts) throw Error;
+    return posts;
   } catch (error) {
     console.error(error);
     return null;

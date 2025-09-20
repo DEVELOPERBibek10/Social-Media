@@ -63,7 +63,7 @@ const PostDetail = () => {
                   </div>
                 </div>
               </Link>
-              {user?.$id === post.creator.$id && (
+              {user?.$id === post?.creator.$id && (
                 <div className="flex justify-center items-center lg:gap-4">
                   <Link to={`/edit-post/${post.$id}`} className="shrink-0">
                     <img

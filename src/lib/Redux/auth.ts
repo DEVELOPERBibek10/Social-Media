@@ -7,6 +7,7 @@ export const getCurrentUserDataFromDB = createAsyncThunk<currentUserData, void>(
   async (_, { rejectWithValue }) => {
     try {
       const currentUser = await getCurrentUser();
+
       return currentUser as currentUserData;
     } catch (error: unknown) {
       if (error instanceof Error) {

@@ -12,6 +12,10 @@ type PostCardProps = {
 const PostCard = ({ post }: PostCardProps) => {
   const { user } = useSelector((state: RootState) => state.auth);
 
+  if (!user) {
+    return;
+  }
+
   return (
     <div className="bg-gray-100 rounded-xl border border-slate-300 px-4 py-3 lg:py-4 w-full max-w-3xl md:max-w-2xl">
       <div className="flex justify-between items-center w-full">
@@ -71,7 +75,7 @@ const PostCard = ({ post }: PostCardProps) => {
         />
       </Link>
       <div className="w-full flex items-center mt-5">
-        <PostStats post={post} userId={user?.$id} />
+        <PostStats post={post} userId={user!.$id} />
       </div>
     </div>
   );

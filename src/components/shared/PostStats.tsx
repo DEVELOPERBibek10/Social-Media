@@ -12,48 +12,52 @@ import { useEffect, useState } from "react";
 
 interface PostStatsProps {
   post: Models.Document;
-  userId: string | undefined;
+  userId: string;
+  style_center?: boolean;
+  style_text_white?: boolean;
 }
-const PostStats = ({ post, userId }: PostStatsProps) => {
+const PostStats = ({
+  post,
+  userId,
+  style_center = false,
+  style_text_white = false,
+}: PostStatsProps) => {
   const likesList = post.liked.map((user: Models.Document) => user.$id);
-  const { mutate: likePost } = useLikePost();
-  const { mutate: savePost } = useSavePost();
-  const { mutate: deleteSavedPost } = useDeleteSavedPost();
+  const { mutateAsync: likePost } = useLikePost();
+  const { mutateAsync: savePost } = useSavePost();
+  const { mutateAsync: deleteSavedPost } = useDeleteSavedPost();
 
   const [likes, setLikes] = useState<string[]>(likesList);
   const [isSaved, setIsSaved] = useState(false);
 
-  const { data: currentUser } = useGetCurrentUser();
-
-  console.log(currentUser);
+  const { data: currentUser, isFetching } = useGetCurrentUser();
 
   const handleLikePost = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
   ) => {
     e.stopPropagation();
-
     let likesArray = [...likes];
-
     if (likesArray.includes(userId!)) {
       likesArray = likesArray.filter((Id) => Id !== userId);
     } else {
       likesArray.push(userId!);
     }
-
-    setLikes(likesArray);
-
     likePost({ postId: post.$id, likedArray: likesArray });
+
+    setLikes(() => likesArray);
   };
 
-  const savedPostRecord = currentUser?.save.find(
-    (record: Models.Document) => record.post.$id === post.$id
-  );
-
-  console.log(post.$id);
+  const savedPostRecord =
+    !isFetching &&
+    currentUser?.save?.find((record: Models.Document) => {
+      return record?.post?.$id === post.$id;
+    });
 
   useEffect(() => {
-    setIsSaved(savedPostRecord ? true : false);
-  }, [currentUser, savedPostRecord]);
+    if (!isFetching && currentUser && savedPostRecord) {
+      setIsSaved(!!savedPostRecord);
+    }
+  }, [currentUser, isFetching, savedPostRecord]);
 
   const handleSavedPost = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
@@ -72,7 +76,11 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   };
 
   return (
-    <div className="flex justify-between items-center w-full z-20">
+    <div
+      className={`flex ${
+        style_center ? "justify-center" : "justify-between"
+      } items-center w-full z-20`}
+    >
       <div className="flex gap-2 mr-5">
         <img
           src={`${
@@ -86,7 +94,11 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
           onClick={(e) => handleLikePost(e)}
           className="cursor-pointer"
         />
-        <p className="text-sm font-medium leading-[140%] lg:text-base">
+        <p
+          className={`text-sm font-medium leading-[140%] lg:text-base ${
+            style_text_white ? "text-white" : "text-black"
+          }`}
+        >
           {likes.length}
         </p>
       </div>
