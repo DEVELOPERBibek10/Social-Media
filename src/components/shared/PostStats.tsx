@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useDeleteSavedPost,
   useGetCurrentUser,
@@ -23,14 +24,18 @@ const PostStats = ({
   style_text_white = false,
 }: PostStatsProps) => {
   const likesList = post.liked.map((user: Models.Document) => user.$id);
+
   const { mutateAsync: likePost } = useLikePost();
   const { mutateAsync: savePost } = useSavePost();
   const { mutateAsync: deleteSavedPost } = useDeleteSavedPost();
 
   const [likes, setLikes] = useState<string[]>(likesList);
   const [isSaved, setIsSaved] = useState(false);
+  const { data: currentUser } = useGetCurrentUser();
 
-  const { data: currentUser, isFetching } = useGetCurrentUser();
+  const savedPostRecord = currentUser?.save?.find((record: Models.Document) => {
+    return record?.post?.$id === post.$id;
+  });
 
   const handleLikePost = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
@@ -44,20 +49,10 @@ const PostStats = ({
     }
     likePost({ postId: post.$id, likedArray: likesArray });
 
-    setLikes(() => likesArray);
-  };
-
-  const savedPostRecord =
-    !isFetching &&
-    currentUser?.save?.find((record: Models.Document) => {
-      return record?.post?.$id === post.$id;
+    setLikes(() => {
+      return [...likesArray];
     });
-
-  useEffect(() => {
-    if (!isFetching && currentUser && savedPostRecord) {
-      setIsSaved(!!savedPostRecord);
-    }
-  }, [currentUser, isFetching, savedPostRecord]);
+  };
 
   const handleSavedPost = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
@@ -66,7 +61,6 @@ const PostStats = ({
 
     if (savedPostRecord) {
       setIsSaved(false);
-
       return deleteSavedPost(savedPostRecord.$id);
     }
 
@@ -74,6 +68,14 @@ const PostStats = ({
 
     setIsSaved(true);
   };
+
+  useEffect(() => {
+    setIsSaved(!!savedPostRecord);
+  }, [savedPostRecord]);
+
+  useEffect(() => {
+    if (likesList) setLikes(likesList);
+  }, [likesList.length]);
 
   return (
     <div

@@ -5,5 +5,6 @@ export const QUERY_KEYS = {
   GET_CURRENT_USER: "getCurrentUser",
   GET_INFINITE_POST: "getInfinitePost",
   GET_SEACH_QUERY: "getSeachQuery",
+  GET_USERS: "getUsers",
 } as const;
 export type QUERY_KEYS = (typeof QUERY_KEYS)[keyof typeof QUERY_KEYS];

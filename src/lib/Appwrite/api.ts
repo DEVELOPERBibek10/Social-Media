@@ -374,3 +374,22 @@ export async function searchPosts(searchTerm: string) {
     return null;
   }
 }
+
+export async function getUsers(limit?: number) {
+  const queries: string[] = [Query.orderDesc("$createdAt")];
+  if (limit) {
+    queries.push(Query.limit(limit));
+  }
+  try {
+    const users = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      queries
+    );
+    if (!users) throw Error;
+    return users;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}

@@ -14,6 +14,7 @@ import {
   getInfinitePosts,
   getPostById,
   getRecentPost,
+  getUsers,
   postReaction,
   savePost,
   searchPosts,
@@ -22,7 +23,7 @@ import {
   updatePost,
 } from "../Appwrite/api";
 import { QUERY_KEYS } from "./queryKeys";
-import type { Models } from "appwrite";
+import { type Models } from "appwrite";
 
 export const useCreateUserAccount = () => {
   return useMutation({
@@ -166,7 +167,7 @@ export const useDeletePost = () => {
 export const useGetPosts = () => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_INFINITE_POST],
-    queryFn: getInfinitePosts as any,
+    queryFn: getInfinitePosts as never,
     initialPageParam: null,
     getNextPageParam: (lastPage: Models.Document) => {
       if (!lastPage.documents || lastPage.documents.length === 0) {
@@ -201,5 +202,12 @@ export const useSearchPosts = (searchTerm: string) => {
     queryKey: [QUERY_KEYS.GET_SEACH_QUERY, searchTerm],
     queryFn: () => searchPosts(searchTerm),
     enabled: !!searchTerm,
+  });
+};
+
+export const useGetUsers = (limit?: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USERS],
+    queryFn: () => getUsers(limit),
   });
 };
