@@ -24,7 +24,7 @@ const PostCard = ({ post }: PostCardProps) => {
             <img
               src={post.creator?.imageUrl || ""}
               alt="profile"
-              className="w-14 h-14 rounded-full"
+              className="w-12 h-12 rounded-full"
             />
           </Link>
           <div className="flex flex-col justify-center">
