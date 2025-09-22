@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 const EditPost = () => {
   const { postId } = useParams();
   const { data: post, isPending } = useGetPostById(postId);
-  console.log(post);
+
   if (isPending) {
     return (
       <div className="flex justify-center items-center w-full h-full">
@@ -14,6 +14,7 @@ const EditPost = () => {
       </div>
     );
   }
+
   return (
     <main className="flex flex-1 min-h-screen">
       <div className="flex flex-col flex-1 items-center justify-start gap-10 overflow-auto py-10 px-5 md:px-8 lg:p-14">

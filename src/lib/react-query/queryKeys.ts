@@ -6,5 +6,6 @@ export const QUERY_KEYS = {
   GET_INFINITE_POST: "getInfinitePost",
   GET_SEACH_QUERY: "getSeachQuery",
   GET_USERS: "getUsers",
+  GET_USER_BY_ID: "getUserById",
 } as const;
 export type QUERY_KEYS = (typeof QUERY_KEYS)[keyof typeof QUERY_KEYS];

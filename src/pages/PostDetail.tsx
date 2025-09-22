@@ -14,6 +14,14 @@ const PostDetail = () => {
   const { mutateAsync: deletePost } = useDeletePost();
   const navigate = useNavigate();
 
+  if (!user) {
+    return (
+      <div className="min-h-[75vh] w-full flex items-center justify-center">
+        <Loader w={46} h={46} />
+      </div>
+    );
+  }
+
   function handelDeletePost() {
     deletePost({ postId: post!.$id, imageId: post!.imageId });
     navigate("/");

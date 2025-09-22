@@ -3,6 +3,7 @@ import type { RootState } from "@/lib/Redux/store";
 import Loader from "@/components/shared/Loader";
 import { useSelector } from "react-redux";
 import UserCard from "@/components/shared/UserCard";
+import { toast } from "sonner";
 
 const Peoples = () => {
   const {
@@ -10,8 +11,12 @@ const Peoples = () => {
     isLoading: isUserListLoading,
     isError: isUserError,
   } = useGetUsers(10);
-
   const currentUser = useSelector((state: RootState) => state.auth.user);
+
+  if (isUserError) {
+    return toast.error("Something went wrong");
+  }
+
   return (
     <div className="flex flex-col flex-1 items-center overflow-y-auto overflow-x-hidden py-10 px-5 md:p-14 w-full">
       <div className="mx-w-5xl flex flex-col items-center w-full gap-6 md:gap-9">
