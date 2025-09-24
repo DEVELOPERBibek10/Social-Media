@@ -20,13 +20,21 @@ const Home = () => {
 
   const currentUser = useSelector((state: RootState) => state.auth.user);
 
+  if (!users || !currentUser) {
+    return (
+      <div className="flex w-full min-h-[70vh] items-center justify-center">
+        <Loader w={50} h={50} />
+      </div>
+    );
+  }
+
   if (!isPostError) {
     return (
       <>
         <main className="flex flex-1 w-full md:w-[96.5%]">
           <div className="flex flex-col flex-1 items-center gap-10  py-10 px-5 md:px-8 lg:p-14">
             <div className="flex flex-1 flex-col items-center w-full gap-6 md:gap-9">
-              <h3 className="text-2xl flex flex-1 justify-center w-full font-bold leading-[140%] mx-auto tracking-tighter">
+              <h3 className="text-2xl flex justify-center w-full font-bold leading-[140%] mx-auto tracking-tighter">
                 Home Feed
               </h3>
               {isPostLoading ? (
@@ -34,7 +42,7 @@ const Home = () => {
                   <Loader w={54} h={54} />
                 </div>
               ) : !posts?.total ? (
-                <div className="min-h-s w-full flex justify-center items-center">
+                <div className="h-full w-full flex justify-center items-start mt-52 lg:mt-64">
                   <span className="text-xl md:text-3xl font-medium">
                     No posts available
                   </span>

@@ -403,6 +403,7 @@ export async function getUserById(userId: string) {
       userId
     );
     if (!user) throw Error;
+    console.log(user);
     return user;
   } catch (error) {
     console.error(error);

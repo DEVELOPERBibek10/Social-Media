@@ -41,7 +41,7 @@ const UpdateProfile = () => {
       name: user?.name,
       username: user?.username,
       email: user?.email,
-      bio: "",
+      bio: user?.bio || "",
     },
   });
 

@@ -27,19 +27,21 @@ const Peoples = () => {
           <div className="min-h-[75vh] flex items-center">
             <Loader w={44} h={44} />
           </div>
+        ) : !isUserError && users!.documents?.length > 1 ? (
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+            {users?.documents.map(
+              (creator) =>
+                creator.$id !== currentUser?.$id && (
+                  <li key={creator?.$id} className="">
+                    <UserCard user={creator} />
+                  </li>
+                )
+            )}
+          </ul>
         ) : (
-          !isUserError && (
-            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-              {users?.documents.map(
-                (creator) =>
-                  creator.$id !== currentUser?.$id && (
-                    <li key={creator?.$id} className="">
-                      <UserCard user={creator} />
-                    </li>
-                  )
-              )}
-            </ul>
-          )
+          <p className="text-2xl w-full font-semibold text-center mt-40">
+            No users to show
+          </p>
         )}
       </div>
     </div>

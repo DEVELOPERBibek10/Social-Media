@@ -124,7 +124,7 @@ const Profile = () => {
         <Route
           index
           element={
-            currentUser.$id === user.$id && currentUser.posts.length !== 0 ? (
+            currentUser.posts.length !== 0 ? (
               <GridPostList
                 posts={currentUser.posts}
                 showUser={false}

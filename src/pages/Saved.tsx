@@ -32,9 +32,9 @@ const Saved = () => {
           <Loader w={50} h={50} />
         </div>
       ) : (
-        <ul className="w-full min-h-[70vh] items-center flex justify-center gap-9 ">
+        <ul className="w-full min-h-[70vh] gap-9 ">
           {!savedPost?.length ? (
-            <p className="text-slate-400 font-semibold text-2xl text-center">
+            <p className=" font-semibold text-2xl text-center mt-52">
               No posts to show
             </p>
           ) : (

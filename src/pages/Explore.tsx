@@ -80,7 +80,9 @@ const Explore = () => {
             isFetchingSearchResults={isSearching}
           />
         ) : showPosts ? (
-          <p>End of posts</p>
+          <p className="text-center w-full text-2xl font-semibold mt-40">
+            End of posts
+          </p>
         ) : (
           posts.pages.map((item, index) => (
             <GridPostList key={`page-${index}`} posts={item.documents} />
