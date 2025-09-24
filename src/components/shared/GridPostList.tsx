@@ -25,7 +25,7 @@ const GridPostList = ({
         <li key={post.$id} className="relative min-w-80 h-80">
           <Link
             to={`/post/${post.$id}`}
-            className="flex rounded-3xl border-slate-400  overflow-hidden cursor-pointer w-full h-full"
+            className="flex rounded-3xl border-slate-400 overflow-hidden cursor-pointer w-full h-full"
           >
             <img
               src={post.imageUrl}
@@ -33,7 +33,11 @@ const GridPostList = ({
               className="h-full w-full object-cover"
             />
           </Link>
-          <div className="absolute bottom-0 p-4 bg-black/30 flex items-center  justify-between w-full rounded-b-3xl gap-2">
+          <div
+            className={`absolute bottom-0 p-4 ${
+              showStats || (showUser && "bg-black/30")
+            } flex items-center  justify-between w-full rounded-b-3xl gap-2`}
+          >
             {showUser && (
               <div className="flex items-center justify-start gap-2 flex-1">
                 <img

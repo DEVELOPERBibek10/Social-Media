@@ -32,9 +32,11 @@ const Saved = () => {
           <Loader w={50} h={50} />
         </div>
       ) : (
-        <ul className="w-full flex  gap-9 ">
+        <ul className="w-full min-h-[70vh] items-center flex justify-center gap-9 ">
           {!savedPost?.length ? (
-            <p className="text-slate-400 text-center">No posts to show</p>
+            <p className="text-slate-400 font-semibold text-2xl text-center">
+              No posts to show
+            </p>
           ) : (
             <GridPostList posts={savedPost} showStats={false} />
           )}

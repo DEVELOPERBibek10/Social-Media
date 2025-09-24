@@ -50,3 +50,14 @@ export interface UpdatePost {
   location?: string;
   tags?: string;
 }
+
+export interface UpdateUser {
+  userId: string;
+  name: string;
+  imageId: string;
+  email?: string;
+  username?: string;
+  imageUrl: URL | string;
+  bio: string;
+  file: File[];
+}

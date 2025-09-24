@@ -3,6 +3,7 @@ import type {
   NewPost,
   NewUser,
   UpdatePost,
+  UpdateUser,
   UserData,
 } from "@/types";
 import {
@@ -403,6 +404,54 @@ export async function getUserById(userId: string) {
     );
     if (!user) throw Error;
     return user;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function updateUser(user: UpdateUser) {
+  const hasFileToUpdate = user.file.length > 0;
+  try {
+    let image = {
+      imageUrl: user.imageUrl ? user.imageUrl : "",
+      imageId: user.imageId,
+    };
+    if (hasFileToUpdate) {
+      const uploadedFile = await uploadFile(user.file[0]);
+      if (!uploadedFile) throw Error;
+
+      const fileUrl = getFilePreview(uploadedFile.$id);
+
+      if (!fileUrl) {
+        const deletion = await deleteFile(uploadedFile.$id);
+        if (!deletion) throw Error;
+        throw Error;
+      }
+      image = { ...image, imageId: uploadedFile.$id, imageUrl: fileUrl! };
+    }
+
+    //Update User
+    const updatedUser = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      user.userId,
+      {
+        name: user.name,
+        bio: user.bio,
+        imageUrl: image.imageUrl,
+        imageId: image.imageId,
+      }
+    );
+    if (!updatedUser) {
+      if (hasFileToUpdate) {
+        await deleteFile(image.imageId);
+      }
+      throw Error;
+    }
+    if (user.imageId && hasFileToUpdate) await deleteFile(user.imageId);
+
+    return updatedUser;
   } catch (error) {
     console.error(error);
     return null;

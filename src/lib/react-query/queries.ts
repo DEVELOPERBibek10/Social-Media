@@ -1,4 +1,4 @@
-import type { NewPost, NewUser, UpdatePost } from "@/types";
+import type { NewPost, NewUser, UpdatePost, UpdateUser } from "@/types";
 import {
   useInfiniteQuery,
   useMutation,
@@ -22,6 +22,7 @@ import {
   signInUser,
   signOutUser,
   updatePost,
+  updateUser,
 } from "../Appwrite/api";
 import { QUERY_KEYS } from "./queryKeys";
 import { type Models } from "appwrite";
@@ -177,6 +178,22 @@ export const useGetPosts = () => {
       const lastPost = lastPage.documents[lastPage.documents.length - 1];
 
       return lastPost.$id;
+    },
+  });
+};
+
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (user: UpdateUser) => updateUser(user),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id],
+      });
     },
   });
 };

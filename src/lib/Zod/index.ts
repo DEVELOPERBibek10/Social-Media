@@ -52,3 +52,15 @@ export const PostFormSchema = z.object({
       message: "maximum limit for tags is 100 characters",
     }),
 });
+
+export const ProfileFormSchema = z.object({
+  file: z.custom<File[]>(),
+  name: z.string().min(3, {
+    message: "Name must be at least 3 characters.",
+  }),
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  email: z.email(),
+  bio: z.string(),
+});

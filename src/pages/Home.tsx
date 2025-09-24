@@ -34,7 +34,7 @@ const Home = () => {
                   <Loader w={54} h={54} />
                 </div>
               ) : !posts?.total ? (
-                <div className="min-h-screen w-full flex justify-center items-center">
+                <div className="min-h-s w-full flex justify-center items-center">
                   <span className="text-xl md:text-3xl font-medium">
                     No posts available
                   </span>
@@ -50,29 +50,34 @@ const Home = () => {
               )}
             </div>
           </div>
-          <div className="hidden md:flex flex-col w-64 xl:w-[465px] px-6 py-16 gap-10 overflow-auto ">
-            <h3 className="text-2xl font-bold leading-[140%] tracking-tighter text-center">
-              Top Creators
-            </h3>
-            {isUserListLoading && !users ? (
-              <div className="h-full flex items-center">
-                <Loader w={44} h={44} />
-              </div>
-            ) : (
-              !isUserError && (
-                <ul className="grid lg:grid-cols-2 place-content-center gap-6">
-                  {users?.documents.map(
-                    (creator) =>
-                      creator.$id !== currentUser?.$id && (
-                        <li key={creator?.$id} className="flex justify-center">
-                          <UserCard user={creator} />
-                        </li>
-                      )
-                  )}
-                </ul>
-              )
-            )}
-          </div>
+          {users!.documents?.length > 1 && (
+            <div className="hidden md:flex flex-col w-64 xl:w-[465px] px-6 py-16 gap-10 overflow-auto ">
+              <h3 className="text-2xl font-bold leading-[140%] tracking-tighter text-center">
+                Top Creators
+              </h3>
+              {isUserListLoading && !users ? (
+                <div className="h-full flex items-center">
+                  <Loader w={44} h={44} />
+                </div>
+              ) : (
+                !isUserError && (
+                  <ul className="grid lg:grid-cols-2 place-content-center gap-6">
+                    {users?.documents.map(
+                      (creator) =>
+                        creator.$id !== currentUser?.$id && (
+                          <li
+                            key={creator?.$id}
+                            className="flex justify-center"
+                          >
+                            <UserCard user={creator} />
+                          </li>
+                        )
+                    )}
+                  </ul>
+                )
+              )}
+            </div>
+          )}
         </main>
       </>
     );
