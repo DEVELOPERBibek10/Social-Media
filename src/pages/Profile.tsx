@@ -147,7 +147,7 @@ const Profile = () => {
               likedPosts.length ? (
                 <GridPostList
                   posts={likedPosts}
-                  showUser={true}
+                  showUser={false}
                   showStats={false}
                 />
               ) : (
