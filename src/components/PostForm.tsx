@@ -29,7 +29,7 @@ interface PostFormProps {
 }
 
 const PostForm = ({ post, action }: PostFormProps) => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user } = useSelector((state: RootState) => state.auth as RootState["auth"]);
   const { mutateAsync: createPost, isPending: isLoadingCreate } =
     useCreatePost();
   const navigate = useNavigate();
