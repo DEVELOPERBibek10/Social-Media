@@ -37,31 +37,30 @@ const PostStats = ({
     return record?.post?.$id === post.$id;
   });
 
-const handleLikePost = async (
-  e: React.MouseEvent<HTMLImageElement, MouseEvent>
-) => {
-  e.stopPropagation();
+  const handleLikePost = async (
+    e: React.MouseEvent<HTMLImageElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
 
-  let likesArray = [...likes];
-  const isLiked = likesArray.includes(userId!);
+    let likesArray = [...likes];
+    const isLiked = likesArray.includes(userId!);
 
-  // Optimistic update
-  if (isLiked) {
-    likesArray = likesArray.filter((Id) => Id !== userId);
-  } else {
-    likesArray.push(userId!);
-  }
-  setLikes(likesArray);
 
-  // Call mutation
-  try {
-    await likePost({ postId: post.$id, likedArray: likesArray });
-  } catch (error) {
-    // Revert on error
-    setLikes(likesList);
-    console.error("Failed to like post:", error);
-  }
-};
+    if (isLiked) {
+      likesArray = likesArray.filter((Id) => Id !== userId);
+    } else {
+      likesArray.push(userId!);
+    }
+    setLikes(likesArray);
+
+    try {
+      await likePost({ postId: post.$id, likedArray: likesArray });
+    } catch (error) {
+
+      setLikes(likesList);
+      console.error("Failed to like post:", error);
+    }
+  };
 
   const handleSavedPost = async (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
@@ -77,7 +76,7 @@ const handleLikePost = async (
         await savePost({ userId: userId!, postId: post.$id });
       }
     } catch (error) {
-      // Revert on error
+
       setIsSaved(!!savedPostRecord);
       console.error("Failed to save post:", error);
     }
@@ -85,8 +84,11 @@ const handleLikePost = async (
 
   useEffect(() => {
     setIsSaved(!!savedPostRecord);
-  }, [savedPostRecord?.$id]);
+  }, [savedPostRecord]);
 
+  useEffect(() => {
+    if (likesList) setLikes(likesList);
+  }, [likesList.length]);
 
   return (
     <div
