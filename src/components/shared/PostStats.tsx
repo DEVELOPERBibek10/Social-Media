@@ -37,45 +37,56 @@ const PostStats = ({
     return record?.post?.$id === post.$id;
   });
 
-  const handleLikePost = (
+const handleLikePost = async (
+  e: React.MouseEvent<HTMLImageElement, MouseEvent>
+) => {
+  e.stopPropagation();
+
+  let likesArray = [...likes];
+  const isLiked = likesArray.includes(userId!);
+
+  // Optimistic update
+  if (isLiked) {
+    likesArray = likesArray.filter((Id) => Id !== userId);
+  } else {
+    likesArray.push(userId!);
+  }
+  setLikes(likesArray);
+
+  // Call mutation
+  try {
+    await likePost({ postId: post.$id, likedArray: likesArray });
+  } catch (error) {
+    // Revert on error
+    setLikes(likesList);
+    console.error("Failed to like post:", error);
+  }
+};
+
+  const handleSavedPost = async (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    let likesArray = [...likes];
-    if (likesArray.includes(userId!)) {
-      likesArray = likesArray.filter((Id) => Id !== userId);
-    } else {
-      likesArray.push(userId!);
+
+    try {
+      if (savedPostRecord) {
+        setIsSaved(false);
+        await deleteSavedPost(savedPostRecord.$id);
+      } else {
+        setIsSaved(true);
+        await savePost({ userId: userId!, postId: post.$id });
+      }
+    } catch (error) {
+      // Revert on error
+      setIsSaved(!!savedPostRecord);
+      console.error("Failed to save post:", error);
     }
-    likePost({ postId: post.$id, likedArray: likesArray });
-
-    setLikes(() => {
-      return [...likesArray];
-    });
-  };
-
-  const handleSavedPost = (
-    e: React.MouseEvent<HTMLImageElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
-
-    if (savedPostRecord) {
-      setIsSaved(false);
-      return deleteSavedPost(savedPostRecord.$id);
-    }
-
-    savePost({ userId: userId!, postId: post.$id });
-
-    setIsSaved(true);
   };
 
   useEffect(() => {
     setIsSaved(!!savedPostRecord);
-  }, [savedPostRecord]);
+  }, [savedPostRecord?.$id]);
 
-  useEffect(() => {
-    if (likesList) setLikes(likesList);
-  }, [likesList.length]);
 
   return (
     <div

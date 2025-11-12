@@ -14,7 +14,7 @@ import {
   ID,
   storage,
 } from "./config";
-import { Query } from "appwrite";
+import { Query, type Models } from "appwrite";
 
 export async function createUserAccount(user: NewUser) {
   try {
@@ -403,8 +403,7 @@ export async function getUserById(userId: string) {
       userId
     );
     if (!user) throw Error;
-    console.log(user);
-    return user;
+    return user as Models.Document;
   } catch (error) {
     console.error(error);
     return null;
