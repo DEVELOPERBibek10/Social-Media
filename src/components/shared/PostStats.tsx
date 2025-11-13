@@ -9,7 +9,7 @@ import {
 import { checkedIsLiked } from "@/lib/utils";
 import type { Models } from "appwrite";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 interface PostStatsProps {
   post: Models.Document;
@@ -23,41 +23,44 @@ const PostStats = ({
   style_center = false,
   style_text_white = false,
 }: PostStatsProps) => {
-  const likesList = post.liked.map((user: Models.Document) => user.$id);
+  const likesList = useMemo(
+    () => post.liked.map((user: Models.Document) => user.$id),
+    [post.$id, post.liked.length]
+  );
 
   const { mutateAsync: likePost } = useLikePost();
   const { mutateAsync: savePost } = useSavePost();
   const { mutateAsync: deleteSavedPost } = useDeleteSavedPost();
 
   const [likes, setLikes] = useState<string[]>(likesList);
-  const [isSaved, setIsSaved] = useState(false);
   const { data: currentUser } = useGetCurrentUser();
 
   const savedPostRecord = currentUser?.save?.find((record: Models.Document) => {
     return record?.post?.$id === post.$id;
   });
+  const [isSaved, setIsSaved] = useState<boolean>(!!savedPostRecord);
 
   const handleLikePost = async (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
   ) => {
     e.stopPropagation();
 
+    const prev = [...likes];
     let likesArray = [...likes];
     const isLiked = likesArray.includes(userId!);
-
 
     if (isLiked) {
       likesArray = likesArray.filter((Id) => Id !== userId);
     } else {
       likesArray.push(userId!);
     }
+
     setLikes(likesArray);
 
     try {
       await likePost({ postId: post.$id, likedArray: likesArray });
     } catch (error) {
-
-      setLikes(likesList);
+      setLikes(prev);
       console.error("Failed to like post:", error);
     }
   };
@@ -67,28 +70,36 @@ const PostStats = ({
   ) => {
     e.stopPropagation();
 
-    try {
-      if (savedPostRecord) {
-        setIsSaved(false);
-        await deleteSavedPost(savedPostRecord.$id);
-      } else {
-        setIsSaved(true);
-        await savePost({ userId: userId!, postId: post.$id });
-      }
-    } catch (error) {
+    const prev = isSaved;
 
-      setIsSaved(!!savedPostRecord);
-      console.error("Failed to save post:", error);
+    if (savedPostRecord) {
+      setIsSaved(false);
+      try {
+        await deleteSavedPost(savedPostRecord.$id);
+      } catch (error) {
+        setIsSaved(prev);
+        console.error("Failed to delete saved post:", error);
+      }
+    } else {
+      setIsSaved(true);
+      try {
+        await savePost({ userId: userId!, postId: post.$id });
+      } catch (error) {
+        setIsSaved(prev);
+        console.error("Failed to save post:", error);
+      }
     }
   };
-
+  // ...existing code...
   useEffect(() => {
     setIsSaved(!!savedPostRecord);
   }, [savedPostRecord]);
 
   useEffect(() => {
-    if (likesList) setLikes(likesList);
-  }, [likesList.length]);
+    if (likesList) {
+      setLikes(likesList);
+    }
+  }, [likesList]);
 
   return (
     <div
@@ -106,7 +117,7 @@ const PostStats = ({
           alt=""
           width={25}
           height={25}
-          onClick={(e) => handleLikePost(e)}
+          onClick={handleLikePost}
           className="cursor-pointer"
         />
         <p
@@ -127,7 +138,7 @@ const PostStats = ({
           alt=""
           width={25}
           height={25}
-          onClick={(e) => handleSavedPost(e)}
+          onClick={handleSavedPost}
           className="cursor-pointer"
         />
       </div>
@@ -135,4 +146,12 @@ const PostStats = ({
   );
 };
 
-export default PostStats;
+export default React.memo(PostStats, (prev, next) => {
+  return (
+    prev.post?.$id === next.post?.$id &&
+    prev.post?.liked?.length === next.post?.liked?.length &&
+    prev.userId === next.userId &&
+    prev.style_center === next.style_center &&
+    prev.style_text_white === next.style_text_white
+  );
+});
