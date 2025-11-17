@@ -42,7 +42,9 @@ const PostStats = ({
     return record?.post?.$id === post.$id;
   });
 
-  const isSaved = !!savedPostRecord;
+  const isSaved = currentUser?.save?.some(
+    (rec: Models.Document) => rec.post.$id === post.$id
+  );
 
   const handleLikePost = async (
     e: React.MouseEvent<SVGAElement, MouseEvent>
@@ -71,7 +73,7 @@ const PostStats = ({
 
     if (isSaved) {
       try {
-        await deleteSavedPost(savedPostRecord.$id);
+        await deleteSavedPost(savedPostRecord!.$id);
       } catch (error) {
         console.error("Failed to delete saved post:", error);
       }
