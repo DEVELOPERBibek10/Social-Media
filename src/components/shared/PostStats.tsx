@@ -5,6 +5,11 @@ import {
   useSavePost,
 } from "@/lib/react-query/queries";
 
+import { FaHeart } from "react-icons/fa6";
+import { FaRegHeart } from "react-icons/fa6";
+import { FaRegBookmark } from "react-icons/fa6";
+import { FaBookmark } from "react-icons/fa6";
+
 import { checkedIsLiked } from "@/lib/utils";
 import type { Models } from "appwrite";
 
@@ -26,8 +31,8 @@ const PostStats = ({
     return post.liked.map((user: Models.Document) => user.$id);
   }, [post.liked]);
 
-  const { mutateAsync: likePost } = useLikePost();
-  const { mutateAsync: savePost } = useSavePost();
+  const { mutateAsync: likePost, isPending: isLiking } = useLikePost();
+  const { mutateAsync: savePost, isPending: isSaving } = useSavePost();
   const { mutateAsync: deleteSavedPost } = useDeleteSavedPost();
   const { data: currentUser } = useGetCurrentUser();
   const isLiked = checkedIsLiked(likesList, userId);
@@ -39,7 +44,7 @@ const PostStats = ({
   const isSaved = !!savedPostRecord;
 
   const handleLikePost = async (
-    e: React.MouseEvent<HTMLImageElement, MouseEvent>
+    e: React.MouseEvent<SVGAElement, MouseEvent>
   ) => {
     e.stopPropagation();
 
@@ -59,7 +64,7 @@ const PostStats = ({
   };
 
   const handleSavedPost = async (
-    e: React.MouseEvent<HTMLImageElement, MouseEvent>
+    e: React.MouseEvent<SVGAElement, MouseEvent>
   ) => {
     e.stopPropagation();
 
@@ -85,18 +90,21 @@ const PostStats = ({
       } items-center w-full z-20`}
     >
       <div className="flex gap-2 mr-5">
-        <img
-          src={`${
-            isLiked
-              ? "https://cdn-icons-png.flaticon.com/128/2107/2107845.png"
-              : "https://cdn-icons-png.flaticon.com/128/13139/13139183.png"
-          }`}
-          alt=""
-          width={25}
-          height={25}
-          onClick={handleLikePost}
-          className="cursor-pointer"
-        />
+        {isLiked ? (
+          <FaHeart
+            className={`${isLiking && "animate-ping"} `}
+            onClick={handleLikePost}
+            size={24}
+            color="red"
+          />
+        ) : (
+          <FaRegHeart
+            className={`${isLiking && "animate-ping"} `}
+            onClick={handleLikePost}
+            size={24}
+            color="red"
+          />
+        )}
         <p
           className={`text-sm font-medium leading-[140%] lg:text-base ${
             style_text_white ? "text-white" : "text-black"
@@ -106,18 +114,21 @@ const PostStats = ({
         </p>
       </div>
       <div className="flex gap-2">
-        <img
-          src={`${
-            isSaved
-              ? "https://cdn-icons-png.flaticon.com/128/4942/4942550.png"
-              : "https://cdn-icons-png.flaticon.com/128/10335/10335589.png"
-          }`}
-          alt=""
-          width={25}
-          height={25}
-          onClick={handleSavedPost}
-          className="cursor-pointer"
-        />
+        {isSaved ? (
+          <FaBookmark
+            className={`${isSaving && "animate-ping"} `}
+            color="skyblue"
+            size={24}
+            onClick={handleSavedPost}
+          />
+        ) : (
+          <FaRegBookmark
+            className={`${isSaving && "animate-ping"} `}
+            color="skyblue"
+            size={24}
+            onClick={handleSavedPost}
+          />
+        )}
       </div>
     </div>
   );
