@@ -117,14 +117,14 @@ const PostStats = ({
       <div className="flex gap-2">
         {isSaved ? (
           <FaBookmark
-            className={`${isSaving && "animate-ping"} `}
+            className={`${isRemovingSave && "animate-ping"} `}
             color="skyblue"
             size={24}
             onClick={handleSavedPost}
           />
         ) : (
           <FaRegBookmark
-            className={`${isRemovingSave && "animate-ping"} `}
+            className={`${isSaving && "animate-ping"} `}
             color="skyblue"
             size={24}
             onClick={handleSavedPost}
