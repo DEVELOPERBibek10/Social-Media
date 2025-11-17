@@ -90,6 +90,7 @@ const PostStats = ({
             className={`${isLiking && "animate-ping"} `}
             size={24}
             color="red"
+            onClick={handleLikePost}
           />
         )}
         <p
