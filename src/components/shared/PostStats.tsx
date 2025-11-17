@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useDeleteSavedPost,
   useGetCurrentUser,
@@ -9,7 +8,7 @@ import {
 import { checkedIsLiked } from "@/lib/utils";
 import type { Models } from "appwrite";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface PostStatsProps {
   post: Models.Document;
@@ -23,10 +22,7 @@ const PostStats = ({
   style_center = false,
   style_text_white = false,
 }: PostStatsProps) => {
-  const likesList = useMemo(
-    () => post.liked.map((user: Models.Document) => user.$id),
-    [post.$id, post.liked.length]
-  );
+  const likesList = post.liked.map((user: Models.Document) => user.$id);
 
   const { mutateAsync: likePost } = useLikePost();
   const { mutateAsync: savePost } = useSavePost();
@@ -146,12 +142,4 @@ const PostStats = ({
   );
 };
 
-export default React.memo(PostStats, (prev, next) => {
-  return (
-    prev.post?.$id === next.post?.$id &&
-    prev.post?.liked?.length === next.post?.liked?.length &&
-    prev.userId === next.userId &&
-    prev.style_center === next.style_center &&
-    prev.style_text_white === next.style_text_white
-  );
-});
+export default PostStats;
