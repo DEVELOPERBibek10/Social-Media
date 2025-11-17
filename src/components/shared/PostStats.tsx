@@ -42,7 +42,7 @@ const PostStats = ({
     return record?.post?.$id === post.$id;
   });
 
-  const isSaved = savedPostRecord?.$id === post.$id;
+  const isSaved = !!savedPostRecord;
 
   const handleLikePost = async (
     e: React.MouseEvent<SVGAElement, MouseEvent>
