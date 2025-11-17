@@ -71,7 +71,7 @@ const PostStats = ({
   ) => {
     e.stopPropagation();
 
-    if (isSaved) {
+    if (!isSaved) {
       try {
         await deleteSavedPost(savedPostRecord!.$id);
       } catch (error) {
