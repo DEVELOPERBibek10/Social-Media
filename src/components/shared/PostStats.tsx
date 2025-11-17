@@ -42,8 +42,6 @@ const PostStats = ({
     return record?.post?.$id === post.$id;
   });
 
-  console.log(savedPostRecord);
-
   const isSaved = !!savedPostRecord;
 
   const handleLikePost = async (
