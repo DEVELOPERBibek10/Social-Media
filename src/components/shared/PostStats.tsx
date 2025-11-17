@@ -68,8 +68,8 @@ const PostStats = ({
     e: React.MouseEvent<SVGAElement, MouseEvent>
   ) => {
     e.stopPropagation();
-
-    if (savedPostRecord) {
+    const isSaved = savedPostRecord?.$id === post.$id;
+    if (isSaved) {
       try {
         await deleteSavedPost(savedPostRecord.$id);
       } catch (error) {
