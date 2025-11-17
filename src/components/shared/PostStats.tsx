@@ -33,7 +33,8 @@ const PostStats = ({
 
   const { mutateAsync: likePost, isPending: isLiking } = useLikePost();
   const { mutateAsync: savePost, isPending: isSaving } = useSavePost();
-  const { mutateAsync: deleteSavedPost } = useDeleteSavedPost();
+  const { mutateAsync: deleteSavedPost, isPending: isRemovingSave } =
+    useDeleteSavedPost();
   const { data: currentUser } = useGetCurrentUser();
   const isLiked = checkedIsLiked(likesList, userId);
 
@@ -123,7 +124,7 @@ const PostStats = ({
           />
         ) : (
           <FaRegBookmark
-            className={`${isSaving && "animate-ping"} `}
+            className={`${isRemovingSave && "animate-ping"} `}
             color="skyblue"
             size={24}
             onClick={handleSavedPost}
