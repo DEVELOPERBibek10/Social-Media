@@ -41,7 +41,6 @@ const PostStats = ({
   ) => {
     e.stopPropagation();
 
-    const prev = [...likes];
     let likesArray = [...likes];
     const isLiked = likesArray.includes(userId!);
 
@@ -56,7 +55,7 @@ const PostStats = ({
     try {
       await likePost({ postId: post.$id, likedArray: likesArray });
     } catch (error) {
-      setLikes(prev);
+      setLikes(likesList);
       console.error("Failed to like post:", error);
     }
   };
