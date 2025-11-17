@@ -227,13 +227,13 @@ export async function savePost(userId: string, postId: string) {
       {
         user: userId,
         post: postId,
+        unique_post: postId,
       }
     );
     if (savedPost.total === 0) throw Error("Post is not saved");
     return savedPost;
   } catch (error) {
     console.error(error);
-
     return null;
   }
 }

@@ -42,8 +42,12 @@ const PostStats = ({
     return record?.post?.$id === post.$id;
   });
 
-  const isSaved = !!savedPostRecord;
+  console.log(savedPostRecord);
 
+  const isSaved = currentUser?.save.some(
+    (rec: Models.Document) => rec.post.$id === savedPostRecord?.post.$id
+  );
+  console.log(isSaved);
   const handleLikePost = async (
     e: React.MouseEvent<SVGAElement, MouseEvent>
   ) => {
@@ -56,12 +60,7 @@ const PostStats = ({
     } else {
       likesArray.push(userId);
     }
-
-    try {
-      await likePost({ postId: post.$id, likedArray: likesArray });
-    } catch (error) {
-      console.error("Failed to like post:", error);
-    }
+    await likePost({ postId: post.$id, likedArray: likesArray });
   };
 
   const handleSavedPost = async (
@@ -70,17 +69,9 @@ const PostStats = ({
     e.stopPropagation();
 
     if (isSaved) {
-      try {
-        await deleteSavedPost(savedPostRecord!.$id);
-      } catch (error) {
-        console.error("Failed to delete saved post:", error);
-      }
+      await deleteSavedPost(savedPostRecord!.$id);
     } else {
-      try {
-        await savePost({ userId: userId!, postId: post.$id });
-      } catch (error) {
-        console.error("Failed to save post:", error);
-      }
+      await savePost({ userId: userId!, postId: post.$id });
     }
   };
 
