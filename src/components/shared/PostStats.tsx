@@ -44,10 +44,8 @@ const PostStats = ({
 
   console.log(savedPostRecord);
 
-  const isSaved = currentUser?.save.some(
-    (rec: Models.Document) => rec.post.$id === savedPostRecord?.post.$id
-  );
-  console.log(isSaved);
+  const isSaved = !!savedPostRecord;
+
   const handleLikePost = async (
     e: React.MouseEvent<SVGAElement, MouseEvent>
   ) => {
@@ -64,7 +62,7 @@ const PostStats = ({
   };
 
   const handleSavedPost = async (
-    e: React.MouseEvent<SVGAElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
 
@@ -85,14 +83,13 @@ const PostStats = ({
         {isLiked ? (
           <FaHeart
             className={`${isLiking && "animate-ping"} `}
-            onClick={handleLikePost}
             size={24}
+            onClick={handleLikePost}
             color="red"
           />
         ) : (
           <FaRegHeart
             className={`${isLiking && "animate-ping"} `}
-            onClick={handleLikePost}
             size={24}
             color="red"
           />
@@ -107,19 +104,27 @@ const PostStats = ({
       </div>
       <div className="flex gap-2">
         {isSaved ? (
-          <FaBookmark
-            className={`${isRemovingSave && "animate-ping"} `}
-            color="skyblue"
-            size={24}
+          <button
+            disabled={isSaving || isRemovingSave}
             onClick={handleSavedPost}
-          />
+          >
+            <FaBookmark
+              className={`${isRemovingSave && "animate-ping"} `}
+              color="skyblue"
+              size={24}
+            />
+          </button>
         ) : (
-          <FaRegBookmark
-            className={`${isSaving && "animate-ping"} `}
-            color="skyblue"
-            size={24}
+          <button
+            disabled={isRemovingSave || isSaving}
             onClick={handleSavedPost}
-          />
+          >
+            <FaRegBookmark
+              className={`${isSaving && "animate-ping"} `}
+              color="skyblue"
+              size={24}
+            />
+          </button>
         )}
       </div>
     </div>
