@@ -42,7 +42,7 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
               alt="image"
               className="h-80 lg:h-[380px] w-full object-cover rounded-3xl"
             />
-          </div>  
+          </div>
         </>
       ) : (
         <div className="flex justify-center items-center flex-col w-full border boder-slate-300 rounded-xl p-7 h-80 lg:h-[512px]">
